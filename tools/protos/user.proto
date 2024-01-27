@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "internal/user_grpc_files/user_grpc";
+
+service UserService {
+    rpc GetUser(User) returns (UserList){}
+}
+
+message UserList{
+    repeated User users = 1;
+}
+
+message User {
+    string Id = 1;
+    int64 AccessLevelID = 2;
+    string Login = 3;
+    string Password = 4;
+}

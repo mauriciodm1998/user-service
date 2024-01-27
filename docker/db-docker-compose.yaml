@@ -1,0 +1,13 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    image: mauricio1998/tech-db
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "fiap_tech_challenge"
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_USER: "postgres"

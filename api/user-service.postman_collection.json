@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "c0c567fd-d446-458f-8a4a-2c99dff4e14f",
+		"name": "user-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14446658"
+	},
+	"item": [
+		{
+			"name": "GetCustomer",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MDYzNDI3MTMsInVzZXJJZCI6IiQyYSQxMCR5YUpWSFcvL2UyZUFsWjlEQlVxQVplTmJTdzRLN0h0ejk3ZDd6VW1QLjBjNUE3WW80M2htQyJ9.ochjfrw351g71CgJV6sH0I_5VWDWimIpwlFjMCUFiew",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8083/api/customer/",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"customer",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCustomerByDocument",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MDYzNDI3MTMsInVzZXJJZCI6IiQyYSQxMCR5YUpWSFcvL2UyZUFsWjlEQlVxQVplTmJTdzRLN0h0ejk3ZDd6VW1QLjBjNUE3WW80M2htQyJ9.ochjfrw351g71CgJV6sH0I_5VWDWimIpwlFjMCUFiew",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8083/api/customer/?document=44684286545",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"customer",
+						""
+					],
+					"query": [
+						{
+							"key": "document",
+							"value": "44684286545"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCustomerByUserId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MDYzNDI3MTMsInVzZXJJZCI6IiQyYSQxMCR5YUpWSFcvL2UyZUFsWjlEQlVxQVplTmJTdzRLN0h0ejk3ZDd6VW1QLjBjNUE3WW80M2htQyJ9.ochjfrw351g71CgJV6sH0I_5VWDWimIpwlFjMCUFiew",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8083/api/customer/?userid=9f45cfb1-8a83-4d21-b11c-3f9dd9701f61",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"customer",
+						""
+					],
+					"query": [
+						{
+							"key": "userid",
+							"value": "9f45cfb1-8a83-4d21-b11c-3f9dd9701f61"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserByLogin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MDYzNDI3MTMsInVzZXJJZCI6IiQyYSQxMCR5YUpWSFcvL2UyZUFsWjlEQlVxQVplTmJTdzRLN0h0ejk3ZDd6VW1QLjBjNUE3WW80M2htQyJ9.ochjfrw351g71CgJV6sH0I_5VWDWimIpwlFjMCUFiew",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8083/api/user/?login=login123",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"user",
+						""
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": "login123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MDYzNDI3MTMsInVzZXJJZCI6IiQyYSQxMCR5YUpWSFcvL2UyZUFsWjlEQlVxQVplTmJTdzRLN0h0ejk3ZDd6VW1QLjBjNUE3WW80M2htQyJ9.ochjfrw351g71CgJV6sH0I_5VWDWimIpwlFjMCUFiew",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8083/api/user/",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"document\":\"44684286545\",\n    \"name\":\"mauricio\",\n    \"email\":\"mauriciodmpires1@gmail.com\",\n    \"login\":\"login123\",\n    \"password\":\"passwordteste123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/api/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

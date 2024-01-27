@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package = "internal/customer_grpc_files/customer_grpc";
+
+service CustomerService {
+    rpc GetCustomer(Customer) returns (CustomerList){}
+}
+
+message CustomerList {
+    repeated Customer customers = 1;
+}
+
+message Customer {
+    string Id = 1;
+    string UserId = 2;
+    string Document = 3;
+    string Name = 4;
+    string Email = 5;
+}
