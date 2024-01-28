@@ -45,7 +45,6 @@ func marshalUsers(users []canonical.User) *user_grpc.UserList {
 			Id:            value.Id,
 			Login:         value.Login,
 			AccessLevelID: int64(value.AccessLevelID),
-			Password:      value.Password,
 		}
 
 		response.Users = append(response.Users, &user)

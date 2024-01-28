@@ -27,7 +27,6 @@ func userToResponse(user canonical.User) UserResponse {
 	return UserResponse{
 		Id:            user.Id,
 		Login:         user.Login,
-		Password:      user.Password,
 		AccessLevelID: user.AccessLevelID,
 	}
 }

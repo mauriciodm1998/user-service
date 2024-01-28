@@ -74,11 +74,9 @@ func TestGetUser(t *testing.T) {
 
 	assert.Equal(t, user.Id, resp.Users[0].Id)
 	assert.Equal(t, user.Login, resp.Users[0].Login)
-	assert.Equal(t, user.Password, resp.Users[0].Password)
 
 	assert.Equal(t, user2.Id, resp.Users[1].Id)
 	assert.Equal(t, user2.Login, resp.Users[1].Login)
-	assert.Equal(t, user2.Password, resp.Users[1].Password)
 
 	userServiceMock.AssertExpectations(t)
 }
