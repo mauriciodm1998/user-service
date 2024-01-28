@@ -1,5 +1,9 @@
 # FIAP - TechChallenge - User Service
 
+## Description
+
+This service is responsable to menage users and customers. We decided to have 2 entities, user is about a login, password and access level in the system, while customer is an extension for user with informations about the person, like document, email, name, etc, with a link to user entitie. This decision was made to have better control about users. Create requests create the both entities. It exposes a grpc channel to comunicate with the other services in the context that requires user datas.
+
 ## Features
 
 - Create User
@@ -45,4 +49,8 @@ We also have the most recently applied unit tests file in this [folder](/unit-te
 
 ## Infrastructure
 
-This application runs in a k8s cluster. The manifests about the configuration of this application are in this [repository](link-to-gitops).
+This application runs in a k8s cluster. The manifests about the configuration of this application are in this [repository](https://github.com/mauriciodm1998/user-service-gitops).
+
+## Diagram
+
+We have a diagram about a flow of this service [here](/diagrams/user-service-diagram.png)
