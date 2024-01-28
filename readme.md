@@ -45,7 +45,7 @@ If you don't have Go installed on your machine, don't worry. We've created a con
 
 ```make run-tests-in-docker```
 
-We also have the most recently applied unit tests file in this [folder](/unit-tests-results/unit-tests.png) too.
+We also have the most recently applied unit tests file in this [folder](./unit-tests-results/unit-tests-user.png) too.
 
 ## Infrastructure
 
