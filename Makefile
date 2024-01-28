@@ -7,3 +7,5 @@ run-tests-in-docker:
 run-tests:
 	go test ./... -coverprofile cover.out -tags=test && go tool cover -html=cover.out
 
+run-db:
+	docker-compose -f docker/db-docker-compose.yml up -d
