@@ -1,0 +1,906 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>grpc: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">user-service/internal/channels/grpc/customer.go (81.8%)</option>
+				
+				<option value="file1">user-service/internal/channels/grpc/mapping.go (100.0%)</option>
+				
+				<option value="file2">user-service/internal/channels/grpc/user.go (81.8%)</option>
+				
+				<option value="file3">user-service/internal/channels/rest/customer.go (100.0%)</option>
+				
+				<option value="file4">user-service/internal/channels/rest/mapping.go (100.0%)</option>
+				
+				<option value="file5">user-service/internal/channels/rest/rest.go (100.0%)</option>
+				
+				<option value="file6">user-service/internal/channels/rest/user.go (100.0%)</option>
+				
+				<option value="file7">user-service/internal/repositories/customerRepository.go (91.9%)</option>
+				
+				<option value="file8">user-service/internal/repositories/repository.go (0.0%)</option>
+				
+				<option value="file9">user-service/internal/repositories/userRepository.go (91.9%)</option>
+				
+				<option value="file10">user-service/internal/service/customer.go (100.0%)</option>
+				
+				<option value="file11">user-service/internal/service/user.go (97.1%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package grpc
+
+import (
+        "context"
+        "net"
+        "strconv"
+        "user-service/internal/customer_grpc_files/customer_grpc"
+        "user-service/internal/service"
+
+        protocol "google.golang.org/grpc"
+)
+
+type customerGRPCServer struct {
+        service.CustomerService
+        customer_grpc.UnimplementedCustomerServiceServer
+}
+
+func ListenCustomer(port int, customer service.CustomerService) error <span class="cov8" title="1">{
+        server := protocol.NewServer()
+        listener, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">customer_grpc.RegisterCustomerServiceServer(server, &amp;customerGRPCServer{
+                CustomerService: customer,
+        })
+
+        return server.Serve(listener)</span>
+}
+
+func (r *customerGRPCServer) GetCustomer(ctx context.Context, customer *customer_grpc.Customer) (*customer_grpc.CustomerList, error) <span class="cov8" title="1">{
+        request := unmarshalCustomer(customer)
+
+        response, err := r.CustomerService.GetCustomer(ctx, *request)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return marshalCustomers(response), nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package grpc
+
+import (
+        "user-service/internal/canonical"
+        "user-service/internal/customer_grpc_files/customer_grpc"
+        "user-service/internal/user_grpc_files/user_grpc"
+)
+
+func unmarshalCustomer(customer *customer_grpc.Customer) *canonical.Customer <span class="cov8" title="1">{
+        return &amp;canonical.Customer{
+                UserID:   customer.UserId,
+                Document: customer.Document,
+        }
+}</span>
+
+func marshalCustomers(customers []canonical.Customer) *customer_grpc.CustomerList <span class="cov8" title="1">{
+        var response customer_grpc.CustomerList
+
+        for _, value := range customers </span><span class="cov8" title="1">{
+                customer := customer_grpc.Customer{
+                        Id:       value.Id,
+                        Email:    value.Email,
+                        Document: value.Document,
+                        Name:     value.Name,
+                        UserId:   value.UserID,
+                }
+
+                response.Customers = append(response.Customers, &amp;customer)
+        }</span>
+
+        <span class="cov8" title="1">return &amp;response</span>
+}
+
+func unmarshalUser(customer *user_grpc.User) *canonical.User <span class="cov8" title="1">{
+        return &amp;canonical.User{
+                Login: customer.Login,
+        }
+}</span>
+
+func marshalUsers(users []canonical.User) *user_grpc.UserList <span class="cov8" title="1">{
+        var response user_grpc.UserList
+
+        for _, value := range users </span><span class="cov8" title="1">{
+                user := user_grpc.User{
+                        Id:            value.Id,
+                        Login:         value.Login,
+                        AccessLevelID: int64(value.AccessLevelID),
+                }
+
+                response.Users = append(response.Users, &amp;user)
+        }</span>
+
+        <span class="cov8" title="1">return &amp;response</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package grpc
+
+import (
+        "context"
+        "net"
+        "strconv"
+        "user-service/internal/service"
+        "user-service/internal/user_grpc_files/user_grpc"
+
+        protocol "google.golang.org/grpc"
+)
+
+type userGRPCServer struct {
+        service.UserService
+        user_grpc.UnimplementedUserServiceServer
+}
+
+func ListenUser(port int, service service.UserService) error <span class="cov8" title="1">{
+        server := protocol.NewServer()
+        listener, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">user_grpc.RegisterUserServiceServer(server, &amp;userGRPCServer{
+                UserService: service,
+        })
+
+        return server.Serve(listener)</span>
+}
+
+func (r *userGRPCServer) GetUser(ctx context.Context, user *user_grpc.User) (*user_grpc.UserList, error) <span class="cov8" title="1">{
+        request := unmarshalUser(user)
+
+        response, err := r.UserService.GetUser(ctx, *request)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return marshalUsers(response), nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package rest
+
+import (
+        "user-service/internal/canonical"
+        "user-service/internal/service"
+
+        "net/http"
+
+        "github.com/labstack/echo/v4"
+)
+
+type Customer interface {
+        RegisterGroup(*echo.Group)
+        Get(ctx echo.Context) error
+}
+
+type customer struct {
+        service service.CustomerService
+}
+
+func NewCustomerChannel(service service.CustomerService) Customer <span class="cov8" title="1">{
+        return &amp;customer{
+                service: service,
+        }
+}</span>
+
+func (u *customer) RegisterGroup(g *echo.Group) <span class="cov8" title="1">{
+        g.GET("/", u.Get)
+}</span>
+
+func (u *customer) Get(ctx echo.Context) error <span class="cov8" title="1">{
+        queryParams := ctx.QueryParams()
+
+        response, err := u.service.GetCustomer(ctx.Request().Context(), canonical.Customer{
+                UserID:   queryParams.Get("userid"),
+                Document: queryParams.Get("document"),
+        })
+        if err != nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusInternalServerError, Response{
+                        Message: err.Error(),
+                })
+        }</span>
+
+        <span class="cov8" title="1">var users []CustomerResponse
+
+        for _, value := range response </span><span class="cov8" title="1">{
+                users = append(users, customerToResponse(value))
+        }</span>
+
+        <span class="cov8" title="1">return ctx.JSON(http.StatusOK, users)</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package rest
+
+import "user-service/internal/canonical"
+
+func (c *CreateUserRequest) toCanonical() (canonical.Customer, canonical.User) <span class="cov8" title="1">{
+        return canonical.Customer{
+                        Name:     c.Name,
+                        Document: c.Document,
+                        Email:    c.Email,
+                }, canonical.User{
+                        Login:    c.Login,
+                        Password: c.Password,
+                }
+}</span>
+
+func customerToResponse(customer canonical.Customer) CustomerResponse <span class="cov8" title="1">{
+        return CustomerResponse{
+                Id:       customer.Id,
+                UserID:   customer.UserID,
+                Document: customer.Document,
+                Name:     customer.Name,
+                Email:    customer.Email,
+        }
+}</span>
+
+func userToResponse(user canonical.User) UserResponse <span class="cov8" title="1">{
+        return UserResponse{
+                Id:            user.Id,
+                Login:         user.Login,
+                AccessLevelID: user.AccessLevelID,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package rest
+
+import (
+        "user-service/internal/config"
+        "user-service/internal/middlewares"
+        "user-service/internal/service"
+
+        "github.com/labstack/echo/v4"
+)
+
+var (
+        cfg = &amp;config.Cfg
+)
+
+type rest struct {
+        customer Customer
+        user     User
+}
+
+func New(customer service.CustomerService, user service.UserService) rest <span class="cov8" title="1">{
+        return rest{
+                customer: NewCustomerChannel(customer),
+                user:     NewUserChannel(user, customer),
+        }
+}</span>
+
+func (r rest) Start() error <span class="cov8" title="1">{
+        router := echo.New()
+
+        router.Use(middlewares.Logger)
+
+        mainGroup := router.Group("/api")
+        customerGroup := mainGroup.Group("/customer")
+
+        customerGroup.Use(middlewares.Authorization)
+
+        r.customer.RegisterGroup(customerGroup)
+        r.user.RegisterGroup(mainGroup)
+
+        return router.Start(":" + cfg.Port)
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package rest
+
+import (
+        "fmt"
+        "user-service/internal/canonical"
+        "user-service/internal/middlewares"
+        "user-service/internal/service"
+
+        "net/http"
+
+        "github.com/labstack/echo/v4"
+)
+
+type User interface {
+        RegisterGroup(*echo.Group)
+        Create(echo.Context) error
+        Get(ctx echo.Context) error
+}
+
+type user struct {
+        userService service.UserService
+}
+
+func NewUserChannel(userService service.UserService, customerSvc service.CustomerService) User <span class="cov8" title="1">{
+        return &amp;user{
+                userService: userService,
+        }
+}</span>
+
+func (u *user) RegisterGroup(g *echo.Group) <span class="cov8" title="1">{
+        userGroup := g.Group("/user")
+        userGroup.Use(middlewares.Authorization)
+
+        userGroup.GET("/", u.Get)
+        g.POST("/create", u.Create)
+}</span>
+
+func (u *user) Create(c echo.Context) error <span class="cov8" title="1">{
+        var userRequest CreateUserRequest
+
+        if err := c.Bind(&amp;userRequest); err != nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusBadRequest, Response{
+                        Message: fmt.Errorf("invalid data").Error(),
+                })
+        }</span>
+
+        <span class="cov8" title="1">customer, userTranslated := userRequest.toCanonical()
+
+        user, err := u.userService.CreateUser(c.Request().Context(), customer, userTranslated)
+        if err != nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusInternalServerError, Response{
+                        Message: err.Error(),
+                })
+        }</span>
+
+        <span class="cov8" title="1">return c.JSON(http.StatusOK, userToResponse(*user))</span>
+}
+
+func (u *user) Get(ctx echo.Context) error <span class="cov8" title="1">{
+        queryParams := ctx.QueryParams()
+
+        response, err := u.userService.GetUser(ctx.Request().Context(), canonical.User{
+                Login: queryParams.Get("login"),
+        })
+        if err != nil </span><span class="cov8" title="1">{
+                return echo.NewHTTPError(http.StatusInternalServerError, Response{
+                        Message: err.Error(),
+                })
+        }</span>
+        <span class="cov8" title="1">var users []UserResponse
+
+        for _, value := range response </span><span class="cov8" title="1">{
+                users = append(users, userToResponse(value))
+        }</span>
+
+        <span class="cov8" title="1">return ctx.JSON(http.StatusOK, users)</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package repository
+
+import (
+        "context"
+        "user-service/internal/canonical"
+)
+
+type CustomerRepository interface {
+        CreateCustomer(context.Context, canonical.Customer) error
+        GetCustomerByUserId(context.Context, string) (*canonical.Customer, error)
+        GetCustomerByDocument(context.Context, string) (*canonical.Customer, error)
+        GetAllCustomers(ctx context.Context) ([]canonical.Customer, error)
+}
+
+type customerRepository struct {
+        db PgxIface
+}
+
+func NewCustomerRepo(db PgxIface) CustomerRepository <span class="cov8" title="1">{
+        return &amp;customerRepository{db}
+}</span>
+
+func (r *customerRepository) CreateCustomer(ctx context.Context, customer canonical.Customer) error <span class="cov8" title="1">{
+        sqlStatement := "INSERT INTO \"Customer\" (Id, UserID, Document, Name, Email) VALUES ($1, $2, $3, $4, $5)"
+
+        _, err := r.db.Exec(ctx, sqlStatement, customer.Id, customer.UserID, customer.Document, customer.Name, customer.Email)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *customerRepository) GetCustomerByUserId(ctx context.Context, userID string) (*canonical.Customer, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(ctx,
+                "SELECT * FROM \"Customer\" WHERE UserID = $1",
+                userID,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var customer canonical.Customer
+        if rows.Next() </span><span class="cov8" title="1">{
+                if err = rows.Scan(
+                        &amp;customer.Id,
+                        &amp;customer.UserID,
+                        &amp;customer.Document,
+                        &amp;customer.Name,
+                        &amp;customer.Email,
+                ); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return &amp;customer, nil</span>
+        }
+
+        <span class="cov8" title="1">return nil, ErrorNotFound</span>
+}
+
+func (r *customerRepository) GetCustomerByDocument(ctx context.Context, document string) (*canonical.Customer, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(ctx,
+                "SELECT * FROM \"Customer\" WHERE Document = $1",
+                document,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var customer canonical.Customer
+        if rows.Next() </span><span class="cov8" title="1">{
+                if err = rows.Scan(
+                        &amp;customer.Id,
+                        &amp;customer.UserID,
+                        &amp;customer.Document,
+                        &amp;customer.Name,
+                        &amp;customer.Email,
+                ); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return &amp;customer, nil</span>
+        }
+
+        <span class="cov8" title="1">return nil, ErrorNotFound</span>
+}
+
+func (r *customerRepository) GetAllCustomers(ctx context.Context) ([]canonical.Customer, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(ctx, "SELECT * FROM \"Customer\"")
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var customers []canonical.Customer
+
+        for rows.Next() </span><span class="cov8" title="1">{
+                var customer canonical.Customer
+
+                if err = rows.Scan(
+                        &amp;customer.Id,
+                        &amp;customer.UserID,
+                        &amp;customer.Document,
+                        &amp;customer.Name,
+                        &amp;customer.Email,
+                ); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">customers = append(customers, customer)</span>
+        }
+
+        <span class="cov8" title="1">return customers, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package repository
+
+import (
+        "context"
+        "errors"
+        "user-service/internal/config"
+
+        "github.com/jackc/pgconn"
+        "github.com/jackc/pgx/v4"
+        "github.com/jackc/pgx/v4/pgxpool"
+        "github.com/sirupsen/logrus"
+)
+
+var (
+        cfg           = &amp;config.Cfg
+        ErrorNotFound = errors.New("entity not found")
+)
+
+func New() PgxIface <span class="cov0" title="0">{
+        db, err := pgxpool.Connect(context.Background(), cfg.DB.ConnectionString)
+        if err != nil </span><span class="cov0" title="0">{
+                logrus.Fatal(err)
+        }</span>
+
+        <span class="cov0" title="0">return db</span>
+}
+
+type PgxIface interface {
+        Begin(context.Context) (pgx.Tx, error)
+        BeginTxFunc(ctx context.Context, txOptions pgx.TxOptions, f func(pgx.Tx) error) (err error)
+        BeginTx(ctx context.Context, txOptions pgx.TxOptions) (pgx.Tx, error)
+        Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
+        Query(context.Context, string, ...interface{}) (pgx.Rows, error)
+        QueryRow(context.Context, string, ...interface{}) pgx.Row
+        QueryFunc(ctx context.Context, sql string, args []interface{}, scans []interface{}, f func(pgx.QueryFuncRow) error) (pgconn.CommandTag, error)
+        Ping(context.Context) error
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package repository
+
+import (
+        "context"
+        "user-service/internal/canonical"
+)
+
+type UserRepository interface {
+        CreateUser(context.Context, canonical.User) error
+        GetUserById(context.Context, string) (*canonical.User, error)
+        GetUserByLogin(context.Context, string) (*canonical.User, error)
+        GetAllUsers(ctx context.Context) ([]canonical.User, error)
+}
+
+type userRepository struct {
+        db PgxIface
+}
+
+func NewUserRepo(db PgxIface) UserRepository <span class="cov8" title="1">{
+        return &amp;userRepository{db}
+}</span>
+
+func (r *userRepository) CreateUser(ctx context.Context, user canonical.User) error <span class="cov8" title="1">{
+        sqlStatement := "INSERT INTO \"User\" (Id, AccessLevelID, Login, Password, Createdat) VALUES ($1, $2, $3, $4, $5)"
+
+        _, err := r.db.Exec(ctx, sqlStatement, user.Id, user.AccessLevelID, user.Login, user.Password, user.CreatedAt)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *userRepository) GetUserByLogin(ctx context.Context, login string) (*canonical.User, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(ctx,
+                "SELECT * FROM \"User\" WHERE LOGIN = $1",
+                login,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var user canonical.User
+        if rows.Next() </span><span class="cov8" title="1">{
+                if err = rows.Scan(
+                        &amp;user.Id,
+                        &amp;user.Login,
+                        &amp;user.Password,
+                        &amp;user.AccessLevelID,
+                        &amp;user.CreatedAt,
+                ); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return &amp;user, nil</span>
+        }
+
+        <span class="cov8" title="1">return nil, ErrorNotFound</span>
+}
+
+func (r *userRepository) GetUserById(ctx context.Context, id string) (*canonical.User, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(ctx,
+                "SELECT * FROM \"User\" WHERE ID = $1",
+                id,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var user canonical.User
+        if rows.Next() </span><span class="cov8" title="1">{
+                if err = rows.Scan(
+                        &amp;user.Id,
+                        &amp;user.Login,
+                        &amp;user.Password,
+                        &amp;user.AccessLevelID,
+                        &amp;user.CreatedAt,
+                ); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return &amp;user, nil</span>
+        }
+
+        <span class="cov8" title="1">return nil, ErrorNotFound</span>
+}
+
+func (r *userRepository) GetAllUsers(ctx context.Context) ([]canonical.User, error) <span class="cov8" title="1">{
+        rows, err := r.db.Query(ctx, "SELECT * FROM \"User\"")
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var users []canonical.User
+
+        for rows.Next() </span><span class="cov8" title="1">{
+                var user canonical.User
+
+                if err = rows.Scan(
+                        &amp;user.Id,
+                        &amp;user.Login,
+                        &amp;user.Password,
+                        &amp;user.AccessLevelID,
+                        &amp;user.CreatedAt,
+                ); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">users = append(users, user)</span>
+        }
+
+        <span class="cov8" title="1">return users, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package service
+
+import (
+        "context"
+        "fmt"
+        "user-service/internal/canonical"
+        repository "user-service/internal/repositories"
+
+        "github.com/google/uuid"
+        "github.com/sirupsen/logrus"
+)
+
+type CustomerService interface {
+        CreateCustomer(context.Context, canonical.Customer) (*canonical.Customer, error)
+        GetCustomer(ctx context.Context, customer canonical.Customer) ([]canonical.Customer, error)
+}
+
+type customerService struct {
+        repo repository.CustomerRepository
+}
+
+func NewCustomerService(repository repository.CustomerRepository) CustomerService <span class="cov8" title="1">{
+        return &amp;customerService{repository}
+}</span>
+
+func (u *customerService) CreateCustomer(ctx context.Context, customer canonical.Customer) (*canonical.Customer, error) <span class="cov8" title="1">{
+        customer.Id = uuid.New().String()
+
+        err := u.repo.CreateCustomer(ctx, customer)
+        if err != nil </span><span class="cov8" title="1">{
+                err = fmt.Errorf("error saving customer in database: %w", err)
+                logrus.WithError(err).Warn()
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return &amp;customer, nil</span>
+}
+
+func (u *customerService) GetCustomer(ctx context.Context, customer canonical.Customer) ([]canonical.Customer, error) <span class="cov8" title="1">{
+        var response []canonical.Customer
+
+        if customer.Document != "" </span><span class="cov8" title="1">{
+                baseCustomer, err := u.repo.GetCustomerByDocument(ctx, customer.Document)
+                if err != nil </span><span class="cov8" title="1">{
+                        err = fmt.Errorf("An error occurred while getting customer in the database: %w", err)
+                        logrus.WithFields(logrus.Fields{"customer Document:": customer.Document}).Error(err)
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">response = append(response, *baseCustomer)
+
+                return response, nil</span>
+        }
+
+        <span class="cov8" title="1">if customer.UserID != "" </span><span class="cov8" title="1">{
+                baseCustomer, err := u.repo.GetCustomerByUserId(ctx, customer.UserID)
+                if err != nil </span><span class="cov8" title="1">{
+                        err = fmt.Errorf("An error occurred while getting customer in the database: %w", err)
+                        logrus.WithFields(logrus.Fields{"customer email:": customer.Email}).Error(err)
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">response = append(response, *baseCustomer)
+
+                return response, nil</span>
+        }
+
+        <span class="cov8" title="1">response, err := u.repo.GetAllCustomers(ctx)
+        if err != nil </span><span class="cov8" title="1">{
+                err = fmt.Errorf("An error occurred while getting customer in the database: %w", err)
+                logrus.Error(err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return response, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package service
+
+import (
+        "context"
+        "fmt"
+        "time"
+        "user-service/internal/canonical"
+        repository "user-service/internal/repositories"
+        "user-service/internal/security"
+
+        "github.com/google/uuid"
+        "github.com/sirupsen/logrus"
+)
+
+type UserService interface {
+        CreateUser(ctx context.Context, customer canonical.Customer, user canonical.User) (*canonical.User, error)
+        GetUser(ctx context.Context, user canonical.User) ([]canonical.User, error)
+}
+
+type userService struct {
+        customerService CustomerService
+        userRepo        repository.UserRepository
+}
+
+func NewUserService(repo repository.UserRepository, customerService CustomerService) UserService <span class="cov8" title="1">{
+        return &amp;userService{
+                userRepo:        repo,
+                customerService: customerService,
+        }
+}</span>
+
+func (u *userService) CreateUser(ctx context.Context, customer canonical.Customer, user canonical.User) (*canonical.User, error) <span class="cov8" title="1">{
+        user.CreatedAt = time.Now()
+        passEncrypted, err := security.Hash(user.Password)
+        if err != nil </span><span class="cov8" title="1">{
+                err = fmt.Errorf("error generating password hash: %w", err)
+                logrus.WithError(err).Warn()
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">user.Password = string(passEncrypted)
+
+        user.Id = uuid.New().String()
+        user.AccessLevelID = 1
+        err = u.userRepo.CreateUser(ctx, user)
+        if err != nil </span><span class="cov8" title="1">{
+                err = fmt.Errorf("error saving user in database: %w", err)
+                logrus.WithError(err).Warn()
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">customer.UserID = user.Id
+
+        _, err = u.customerService.CreateCustomer(ctx, customer)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return &amp;user, nil</span>
+}
+
+func (u *userService) GetUser(ctx context.Context, user canonical.User) ([]canonical.User, error) <span class="cov8" title="1">{
+        var response []canonical.User
+
+        if user.Login != "" </span><span class="cov8" title="1">{
+                baseUser, err := u.userRepo.GetUserByLogin(ctx, user.Login)
+                if err != nil </span><span class="cov8" title="1">{
+                        err = fmt.Errorf("An error occurred while getting user in the database: %w", err)
+                        logrus.WithFields(logrus.Fields{"user Document:": user.Login}).Error(err)
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">response = append(response, *baseUser)
+
+                return response, nil</span>
+        }
+
+        <span class="cov8" title="1">response, err := u.userRepo.GetAllUsers(ctx)
+        if err != nil </span><span class="cov8" title="1">{
+                err = fmt.Errorf("An error occurred while getting user in the database: %w", err)
+                logrus.Error(err)
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return response, nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

@@ -6,6 +6,3 @@ run-tests:
 
 run-db:
 	docker-compose -f build/db-docker-compose.yml up -d
-
-run-app:
-	go run cmd/user-service/main.go
