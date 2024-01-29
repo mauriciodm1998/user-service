@@ -11,7 +11,6 @@ type CreateUserRequest struct {
 type UserResponse struct {
 	Id            string `json:"id"`
 	Login         string `json:"login"`
-	Password      string `json:"password"`
 	AccessLevelID int    `json:"access_level_id"`
 }
 
