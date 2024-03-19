@@ -8,7 +8,6 @@ import (
 	"time"
 	"user-service/internal/canonical"
 	"user-service/internal/customer_grpc_files/customer_grpc"
-	"user-service/internal/mocks"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
@@ -21,11 +20,11 @@ const bufSize = 1024 * 1024
 var lis *bufconn.Listener
 
 var (
-	customerServiceMock *mocks.CustomerServiceMock
+	customerServiceMock *CustomerServiceMock
 )
 
 func init() {
-	customerServiceMock = new(mocks.CustomerServiceMock)
+	customerServiceMock = new(CustomerServiceMock)
 
 	lis = bufconn.Listen(bufSize)
 	s := grpc.NewServer()
@@ -86,6 +85,7 @@ func TestCustomer(t *testing.T) {
 	assert.Equal(t, customer2.Document, resp.Customers[1].Document)
 	assert.Equal(t, customer2.Email, resp.Customers[1].Email)
 
+	assert.Nil(t, err)
 	customerServiceMock.AssertExpectations(t)
 }
 
@@ -100,8 +100,7 @@ func TestListenCustomer(t *testing.T) {
 	time.Sleep(100 * time.Millisecond)
 
 	serverAddr := "localhost:7070"
-	conn, err := grpc.Dial(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
-	defer conn.Close()
+	_, err := grpc.Dial(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
 
 	assert.Nil(t, err)
 	time.Sleep(100 * time.Millisecond)

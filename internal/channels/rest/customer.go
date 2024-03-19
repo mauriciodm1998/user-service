@@ -1,8 +1,10 @@
 package rest
 
 import (
+	"fmt"
 	"user-service/internal/canonical"
 	"user-service/internal/service"
+	"user-service/internal/token"
 
 	"net/http"
 
@@ -12,6 +14,7 @@ import (
 type Customer interface {
 	RegisterGroup(*echo.Group)
 	Get(ctx echo.Context) error
+	Delete(ctx echo.Context) error
 }
 
 type customer struct {
@@ -26,6 +29,7 @@ func NewCustomerChannel(service service.CustomerService) Customer {
 
 func (u *customer) RegisterGroup(g *echo.Group) {
 	g.GET("/", u.Get)
+	g.DELETE("/:id", u.Delete)
 }
 
 func (u *customer) Get(ctx echo.Context) error {
@@ -48,4 +52,29 @@ func (u *customer) Get(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, users)
+}
+
+func (u *customer) Delete(ctx echo.Context) error {
+	customerID := ctx.Param("id")
+	if customerID == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, Response{
+			Message: fmt.Errorf("invalid data").Error(),
+		})
+	}
+
+	requesterId, err := token.ExtractCustomerId(ctx.Request())
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, Response{
+			Message: fmt.Errorf("invalid customer").Error(),
+		})
+	}
+
+	err = u.service.DeleteCustomer(ctx.Request().Context(), requesterId, customerID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, Response{
+			Message: err.Error(),
+		})
+	}
+
+	return ctx.NoContent(http.StatusNoContent)
 }

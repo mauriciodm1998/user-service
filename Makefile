@@ -5,4 +5,4 @@ run-tests:
 	go test ./... -coverprofile cover.out -tags=test && go tool cover -html=cover.out
 
 run-db:
-	docker-compose -f build/db-docker-compose.yml up -d
+	docker-compose -f build/db-docker-compose.yaml up -d

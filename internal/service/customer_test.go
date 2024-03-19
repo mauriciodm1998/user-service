@@ -6,18 +6,17 @@ import (
 	"fmt"
 	"testing"
 	"user-service/internal/canonical"
-	"user-service/internal/mocks"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	customerRepositoryMock *mocks.CustomerRepositoryMock
+	customerRepositoryMock *CustomerRepositoryMock
 	customerSvc            CustomerService
 )
 
 func init() {
-	customerRepositoryMock = new(mocks.CustomerRepositoryMock)
+	customerRepositoryMock = new(CustomerRepositoryMock)
 	customerSvc = NewCustomerService(customerRepositoryMock)
 }
 
@@ -86,7 +85,7 @@ func TestGetCustomerWithDocumentError(t *testing.T) {
 	_, err := customerSvc.GetCustomer(context.Background(), customer)
 
 	customerRepositoryMock.AssertExpectations(t)
-	assert.Equal(t, fmt.Errorf("An error occurred while getting customer in the database: %w", errors.New("generic error")), err)
+	assert.Equal(t, fmt.Errorf("an error occurred while getting customer in the database: %w", errors.New("generic error")), err)
 }
 
 func TestGetCustomerWithUserId(t *testing.T) {
@@ -118,7 +117,7 @@ func TestGetCustomerWithUserIdError(t *testing.T) {
 	_, err := customerSvc.GetCustomer(context.Background(), customer)
 
 	customerRepositoryMock.AssertExpectations(t)
-	assert.Equal(t, fmt.Errorf("An error occurred while getting customer in the database: %w", errors.New("generic error")), err)
+	assert.Equal(t, fmt.Errorf("an error occurred while getting customer in the database: %w", errors.New("generic error")), err)
 }
 
 func TestGetAllCustomers(t *testing.T) {
@@ -145,5 +144,5 @@ func TestGetAllCustomersError(t *testing.T) {
 	_, err := customerSvc.GetCustomer(context.Background(), canonical.Customer{})
 
 	customerRepositoryMock.AssertExpectations(t)
-	assert.Equal(t, fmt.Errorf("An error occurred while getting customer in the database: %w", errors.New("generic error")), err)
+	assert.Equal(t, fmt.Errorf("an error occurred while getting customer in the database: %w", errors.New("generic error")), err)
 }
