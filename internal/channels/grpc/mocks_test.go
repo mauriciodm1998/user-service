@@ -1,9 +1,10 @@
-package mocks
+package grpc
 
 import (
 	"context"
 	"user-service/internal/canonical"
 
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -39,6 +40,12 @@ func (c *CustomerServiceMock) MockGetCustomer(customer canonical.Customer, custo
 	}
 }
 
+func (c *CustomerServiceMock) DeleteCustomer(ctx context.Context, requesterId, customerId string) error {
+	args := c.Called()
+
+	return args.Error(0)
+}
+
 type UserServiceMock struct {
 	mock.Mock
 }
@@ -69,4 +76,23 @@ func (c *UserServiceMock) MockGetUser(user canonical.User, users []canonical.Use
 			return us.Login == user.Login
 		})).Return(users, errorReturned).Times(times)
 	}
+}
+
+type CustomerRestMock struct {
+	mock.Mock
+}
+
+type UserRestMock struct {
+	mock.Mock
+}
+
+func (c *UserRestMock) RegisterGroup(_ *echo.Group) {
+}
+
+func (c *UserRestMock) Get(_ echo.Context) error {
+	return nil
+}
+
+func (c *UserRestMock) Create(_ echo.Context) error {
+	return nil
 }

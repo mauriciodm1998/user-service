@@ -10,6 +10,7 @@ type CustomerRepository interface {
 	GetCustomerByUserId(context.Context, string) (*canonical.Customer, error)
 	GetCustomerByDocument(context.Context, string) (*canonical.Customer, error)
 	GetAllCustomers(ctx context.Context) ([]canonical.Customer, error)
+	DeleteCustomer(ctx context.Context, customerId string) error
 }
 
 type customerRepository struct {
@@ -109,4 +110,13 @@ func (r *customerRepository) GetAllCustomers(ctx context.Context) ([]canonical.C
 	}
 
 	return customers, nil
+}
+
+func (r *customerRepository) DeleteCustomer(ctx context.Context, customerId string) error {
+	_, err := r.db.Exec(ctx, "DELETE FROM  \"Customer\" WHERE ID = $1", customerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -64,7 +64,7 @@ func (u *userService) GetUser(ctx context.Context, user canonical.User) ([]canon
 	if user.Login != "" {
 		baseUser, err := u.userRepo.GetUserByLogin(ctx, user.Login)
 		if err != nil {
-			err = fmt.Errorf("An error occurred while getting user in the database: %w", err)
+			err = fmt.Errorf("an error occurred while getting user in the database: %w", err)
 			logrus.WithFields(logrus.Fields{"user Document:": user.Login}).Error(err)
 			return nil, err
 		}
@@ -76,7 +76,7 @@ func (u *userService) GetUser(ctx context.Context, user canonical.User) ([]canon
 
 	response, err := u.userRepo.GetAllUsers(ctx)
 	if err != nil {
-		err = fmt.Errorf("An error occurred while getting user in the database: %w", err)
+		err = fmt.Errorf("an error occurred while getting user in the database: %w", err)
 		logrus.Error(err)
 		return nil, err
 	}

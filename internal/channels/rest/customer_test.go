@@ -8,19 +8,19 @@ import (
 	"net/http/httptest"
 	"testing"
 	"user-service/internal/canonical"
-	"user-service/internal/mocks"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	customerSvcMock *mocks.CustomerServiceMock
+	customerSvcMock *CustomerServiceMock
 	customerRest    Customer
 )
 
 func init() {
-	customerSvcMock = new(mocks.CustomerServiceMock)
+	customerSvcMock = new(CustomerServiceMock)
 
 	customerRest = NewCustomerChannel(customerSvcMock)
 }
@@ -38,7 +38,7 @@ func TestCustomerRegisterGroup(t *testing.T) {
 	router.ServeHTTP(rec, req)
 
 	status := rec.Result().StatusCode
-	assert.Equal(t, http.StatusNotFound, status)
+	assert.Equal(t, 405, status)
 }
 
 func TestGetCustomer(t *testing.T) {
@@ -107,5 +107,34 @@ func createJsonRequest(method, endpoint string, request interface{}) *http.Reque
 	json, _ := json.Marshal(request)
 	req := httptest.NewRequest(method, endpoint, bytes.NewReader(json))
 	req.Header.Set("Content-Type", "application/json")
+	token, _ := generateToken("")
+	req.Header.Set("authorization", "Berear "+token)
 	return req
+}
+
+func TestDelete(t *testing.T) {
+	customerSvcMock.On("DeleteCustomer").Return(nil)
+
+	req := createJsonRequest(http.MethodDelete, "/", nil)
+
+	rec := httptest.NewRecorder()
+
+	c := echo.New().NewContext(req, rec)
+
+	c.SetParamNames("id")
+	c.SetParamValues("askjdaks")
+
+	err := customerRest.Delete(c)
+
+	assert.Equal(t, 204, rec.Result().StatusCode)
+	assert.Nil(t, err)
+	customerSvcMock.AssertExpectations(t)
+}
+
+func generateToken(userId string) (string, error) {
+	permissions := jwt.MapClaims{}
+	permissions["userId"] = userId
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissions)
+
+	return token.SignedString([]byte(""))
 }

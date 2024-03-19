@@ -7,26 +7,25 @@ import (
 	"testing"
 	"time"
 	"user-service/internal/canonical"
-	"user-service/internal/mocks"
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	userSvcMock *mocks.UserServiceMock
+	userSvcMock *UserServiceMock
 	userRest    User
 )
 
 func init() {
-	userSvcMock = new(mocks.UserServiceMock)
+	userSvcMock = new(UserServiceMock)
 
 	userRest = NewUserChannel(userSvcMock, customerSvcMock)
 }
 
 func TestRestStart(t *testing.T) {
-	customerRestMock := &mocks.CustomerRestMock{}
-	userRestMock := &mocks.UserRestMock{}
+	customerRestMock := &CustomerRestMock{}
+	userRestMock := &UserRestMock{}
 
 	restInstance := New(customerSvcMock, userSvcMock)
 

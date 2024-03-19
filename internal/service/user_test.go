@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 	"user-service/internal/canonical"
-	"user-service/internal/mocks"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/undefinedlabs/go-mpatch"
@@ -15,14 +14,14 @@ import (
 )
 
 var (
-	userRepositoryMock  *mocks.UserRepositoryMock
-	customerServiceMock *mocks.CustomerServiceMock
+	userRepositoryMock  *UserRepositoryMock
+	customerServiceMock *CustomerServiceMock
 	userSvc             UserService
 )
 
 func init() {
-	userRepositoryMock = new(mocks.UserRepositoryMock)
-	customerServiceMock = new(mocks.CustomerServiceMock)
+	userRepositoryMock = new(UserRepositoryMock)
+	customerServiceMock = new(CustomerServiceMock)
 
 	userSvc = NewUserService(userRepositoryMock, customerServiceMock)
 }
@@ -110,7 +109,7 @@ func TestGetWithLoginError(t *testing.T) {
 	_, err := userSvc.GetUser(context.Background(), user)
 
 	userRepositoryMock.AssertExpectations(t)
-	assert.Equal(t, fmt.Errorf("An error occurred while getting user in the database: %w", errors.New("generic error")), err)
+	assert.Equal(t, fmt.Errorf("an error occurred while getting user in the database: %w", errors.New("generic error")), err)
 }
 
 func TestGetAll(t *testing.T) {
@@ -139,5 +138,5 @@ func TestGetAllError(t *testing.T) {
 	_, err := userSvc.GetUser(context.Background(), canonical.User{})
 
 	userRepositoryMock.AssertExpectations(t)
-	assert.Equal(t, fmt.Errorf("An error occurred while getting user in the database: %w", errors.New("generic error")), err)
+	assert.Equal(t, fmt.Errorf("an error occurred while getting user in the database: %w", errors.New("generic error")), err)
 }

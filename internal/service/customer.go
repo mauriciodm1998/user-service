@@ -13,6 +13,7 @@ import (
 type CustomerService interface {
 	CreateCustomer(context.Context, canonical.Customer) (*canonical.Customer, error)
 	GetCustomer(ctx context.Context, customer canonical.Customer) ([]canonical.Customer, error)
+	DeleteCustomer(ctx context.Context, requesterId, customerId string) error
 }
 
 type customerService struct {
@@ -42,7 +43,7 @@ func (u *customerService) GetCustomer(ctx context.Context, customer canonical.Cu
 	if customer.Document != "" {
 		baseCustomer, err := u.repo.GetCustomerByDocument(ctx, customer.Document)
 		if err != nil {
-			err = fmt.Errorf("An error occurred while getting customer in the database: %w", err)
+			err = fmt.Errorf("an error occurred while getting customer in the database: %w", err)
 			logrus.WithFields(logrus.Fields{"customer Document:": customer.Document}).Error(err)
 			return nil, err
 		}
@@ -55,7 +56,7 @@ func (u *customerService) GetCustomer(ctx context.Context, customer canonical.Cu
 	if customer.UserID != "" {
 		baseCustomer, err := u.repo.GetCustomerByUserId(ctx, customer.UserID)
 		if err != nil {
-			err = fmt.Errorf("An error occurred while getting customer in the database: %w", err)
+			err = fmt.Errorf("an error occurred while getting customer in the database: %w", err)
 			logrus.WithFields(logrus.Fields{"customer email:": customer.Email}).Error(err)
 			return nil, err
 		}
@@ -67,10 +68,28 @@ func (u *customerService) GetCustomer(ctx context.Context, customer canonical.Cu
 
 	response, err := u.repo.GetAllCustomers(ctx)
 	if err != nil {
-		err = fmt.Errorf("An error occurred while getting customer in the database: %w", err)
+		err = fmt.Errorf("an error occurred while getting customer in the database: %w", err)
 		logrus.Error(err)
 		return nil, err
 	}
 
 	return response, nil
+}
+
+func (u *customerService) DeleteCustomer(ctx context.Context, requesterId, customerId string) error {
+	requester, err := u.repo.GetCustomerByUserId(ctx, requesterId)
+	if err != nil {
+		return err
+	}
+
+	if requester.Id != customerId {
+		return fmt.Errorf("you can't delete this customer")
+	}
+
+	err = u.repo.DeleteCustomer(ctx, customerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

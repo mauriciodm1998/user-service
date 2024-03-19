@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 	"user-service/internal/canonical"
-	"user-service/internal/mocks"
 	"user-service/internal/user_grpc_files/user_grpc"
 
 	"github.com/stretchr/testify/assert"
@@ -21,11 +20,11 @@ const bufSizeUser = 1024 * 1024
 var lisUser *bufconn.Listener
 
 var (
-	userServiceMock *mocks.UserServiceMock
+	userServiceMock *UserServiceMock
 )
 
 func init() {
-	userServiceMock = new(mocks.UserServiceMock)
+	userServiceMock = new(UserServiceMock)
 
 	lisUser = bufconn.Listen(bufSizeUser)
 	s := grpc.NewServer()
@@ -78,6 +77,7 @@ func TestGetUser(t *testing.T) {
 	assert.Equal(t, user2.Id, resp.Users[1].Id)
 	assert.Equal(t, user2.Login, resp.Users[1].Login)
 
+	assert.Nil(t, err)
 	userServiceMock.AssertExpectations(t)
 }
 
@@ -92,8 +92,7 @@ func TestListenUser(t *testing.T) {
 	time.Sleep(100 * time.Millisecond)
 
 	serverAddr := "localhost:8080"
-	conn, err := grpc.Dial(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
-	defer conn.Close()
+	_, err := grpc.Dial(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
 
 	assert.Nil(t, err)
 	time.Sleep(100 * time.Millisecond)
