@@ -15,6 +15,7 @@ type User interface {
 	RegisterGroup(*echo.Group)
 	Create(echo.Context) error
 	Get(ctx echo.Context) error
+	HealthCheck(c echo.Context) error
 }
 
 type user struct {
@@ -33,6 +34,10 @@ func (u *user) RegisterGroup(g *echo.Group) {
 
 	userGroup.GET("/", u.Get)
 	g.POST("/create", u.Create)
+}
+
+func (r *user) HealthCheck(c echo.Context) error {
+	return c.NoContent(http.StatusOK)
 }
 
 func (u *user) Create(c echo.Context) error {

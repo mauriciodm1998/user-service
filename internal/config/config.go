@@ -22,7 +22,7 @@ type Config struct {
 		Port int `cfg:"port"`
 	} `cfg:"userServer"`
 	DB struct {
-		ConnectionString string `cfg:"connectionString"`
+		ConnectionString string `cfg:"connection_string"`
 	} `cfg:"db"`
 	Port string `cfg:"port"`
 }
@@ -43,4 +43,8 @@ func parse(dirs ...string) {
 	); err != nil {
 		log.Panic(err)
 	}
+}
+
+func Get() Config {
+	return Cfg
 }
