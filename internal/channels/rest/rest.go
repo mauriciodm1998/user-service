@@ -30,6 +30,8 @@ func (r rest) Start() error {
 	router.Use(middlewares.Logger)
 
 	mainGroup := router.Group("/api")
+	mainGroup.GET("/healthz", r.user.HealthCheck)
+
 	customerGroup := mainGroup.Group("/customer")
 
 	customerGroup.Use(middlewares.Authorization)

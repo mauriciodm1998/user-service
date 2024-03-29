@@ -9,6 +9,8 @@ import (
 	repository "user-service/internal/repositories"
 	"user-service/internal/service"
 
+	"github.com/rs/zerolog/log"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,6 +22,8 @@ func main() {
 	config.ParseFromFlags()
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
+
+	log.Info().Any("config", config.Get()).Msg("configuration file")
 
 	customerService, userService := startDependencies()
 
